@@ -1,0 +1,116 @@
+/todos/:
+  GET:
+    success:
+
+      code - 200
+      return collection as array
+      items show only id and title
+
+  POST:
+    success:
+
+      code - 201
+      return item as hash with id, title, due, created_at, updated_at
+
+    failure:
+
+      wrong parameters:
+        code - 405
+        body = 'You must provide the following parameters: <title> and <due>. You provided: ' <<<<< should probably specify but isn't
+
+      too many parameters:
+        still works - should it?
+
+      specify id:
+        still works - should it?
+        id isn't specified
+
+  PATCH:
+    failure:
+      code - 405
+      message "Method not allowed. You cannot update the Collection."
+
+  PUT:
+    failure:
+      code - 405
+      message "Method not allowed. You cannot update the Collection."
+
+  DELETE:
+    failure:
+      code - 405
+      message "Method not allowed. You cannot delete the Collection."
+
+/todos/id
+  GET:
+    success:
+      code - 200
+      return todo as hash with id, title, due, created_at, updated_at
+
+    failure:
+      wrong id:
+        code - 404
+        no message - should it have?
+
+  POST:
+    failure:
+      code - 405
+      message "Method not allowed. To create a new todo, POST to the collection, not an item within it."
+
+    failure:
+      invalid date:
+        code - 500
+        returns '<h1>Internal Server Error</h1>'
+          SHOULD IT?!
+
+  PATCH:
+    success:
+      code - 200
+      return item as hash with id, title, due, created_at, updated_at
+      updated_at should be updated
+
+    failure:
+      wrong id:
+        code - 422 - should it be 405?
+        message "You must provide the following parameters: <title> or <due> in addition to specifying the todo's <id> in the URL."
+
+      wrong parameters:
+        code - 422 - should it be 405?
+        message "You must provide the following parameters: <title> or <due> in addition to specifying the todo's <id> in the URL."
+
+        Why are these the same?
+
+    QUESTION -- should invalid date return error?
+
+  PUT:
+      success:
+        code - 200
+        return item as hash with id, title, due, created_at, updated_at
+        updated_at should be updated
+
+      failure:
+        wrong id:
+          code - 404
+          doesn't give message - should it?
+
+        wrong params:
+          code - 422 - should it be 405
+          message "You must provide the following parameters: <title> or <due> in addition to specifying the todo's <id> in the URL."
+
+      failure:
+        invalid date:
+          code - 500
+          message "<h1>Internal Server Error</h1>"
+          DO we think it should?
+
+  DELETE:
+    success:
+      code - 204
+      return nothing
+
+    failure:
+      wrong id:
+      code - 404
+      no message - should it have message??
+
+
+
