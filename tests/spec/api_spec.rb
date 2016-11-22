@@ -122,7 +122,7 @@ describe 'lacedeamon api' do
   it  'should PUT a todo'  do 
     todo1 = HTTParty.post"#{base_uri}?title=thejourneybeginsPuts&due=22-10-2016"
     put = HTTParty.put"#{base_uri}/#{todo['id']}?title=thejourneybegins3&due=21-10-2016"
-    get = HTTParty.get"#{base_uro}/#{todo['id']}"
+    get = HTTParty.get"#{base_uri}/#{todo['id']}"
     expect(get.code).to eq 200
     expect(get[title]).to eq 'thejourneybegins3' 
     
@@ -145,12 +145,32 @@ describe 'lacedeamon api' do
     expect(put.body).to eq "You must provide the following parameters: <title> or <due> in addition to specifying the todo's <id> in the URL."
   end
 
-  it 'should fail when PUTTING with invalid date'
+  it 'should fail when PUTTING with invalid date' do 
+    todo1 = HTTParty.post "#{base_uri}?title=thejourneybegins3000&due=23-10-2016"
+    put = HTTParty.put "#{base_uri}/#{todo['id']}?title=thejourneybegins3000&due=hfhgrg"
+    expect(put.code).to eq 400
+    expect(put.body).to eq 'Invalid date format. Use yyyy-mm-dd'
+  end
 
-  it 'should DELETE a todo'
+  it 'should DELETE a todo' do 
+    todo1 = HTTParty.post "#{base_uri}?title=thejourneybeginsonanotherlevel&due=23-10-2016"
+    HTTParty.delete "#{base_uri}/#{todo['id']}"
+    expect(delete.code).to eq 204
+    expect(delete.body).to eq ''
+  end 
 
-  it 'should fail when DELETING todo with wrong id'
+  it 'should fail when DELETING todo with wrong id' do 
+    todo1 = HTTParty.post "#{base_uri}?title=thejourneybegins400&due=23-10-2016"
+    HTTParty.delete "#{base_uri}/#{todo]['id']}"
+    HTTParty.delete "#{base_uri}/#{todo]['id']}"
+    expect(delete.code).to eq 404
+    expect(delete.body).to eq ''
+  end
 
-  it 'should fail when id is too large'
+  it 'should fail when id is too large' do 
+    todo1 = HTTParty.post "#{base_uri}?title=thejourneyshouldbloodybegin&due=23-10-2016"
+    
+  end 
+
 
 end
