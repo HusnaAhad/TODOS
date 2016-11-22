@@ -57,7 +57,7 @@ class ApiHelper
 
   def self.teardown
     @@todo_ids.each do |todo_id|
-      remove todo_id
+      self.delete todo_id
     end
   end
 end

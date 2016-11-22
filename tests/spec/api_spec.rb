@@ -1,7 +1,7 @@
 describe 'lacedeamon api' do
   
   after(:all) do ApiHelper.teardown end
-  after(:all) do delete_all end
+  #after(:all) do delete_all end
 
   it 'should GET collection of todos' do
     todo1 = ApiHelper.post_example
@@ -146,12 +146,32 @@ describe 'lacedeamon api' do
     expect(put.body).to eq "You must provide the following parameters: <title> and <due> in addition to specifying the todo's <id> in the URL."
   end
 
-  it 'should fail when PUTTING with invalid date'
+  it 'should fail when PUTTING with invalid date' do 
+    todo1 = ApiHelper.post_example
+    put = ApiHelper.put todo1['id'], 'thejourneybegins3000', 'hsdfhaosd'
+    expect(put.code).to eq 400
+    expect(put.body).to eq 'Invalid date format. Use yyyy-mm-dd'
+  end
 
-  it 'should DELETE a todo'
+  it 'should DELETE a todo' do 
+    todo1 = ApiHelper.post_example
+    del = ApiHelper.delete todo1['id']
+    expect(del.code).to eq 204
+    expect(del.body).to eq nil
+  end 
 
-  it 'should fail when DELETING todo with wrong id'
+  it 'should fail when DELETING todo with wrong id' do 
+    todo1 = ApiHelper.post_example
+    ApiHelper.delete todo1['id']
+    del = ApiHelper.delete todo1['id']
+    expect(del.code).to eq 404
+    expect(del.body).to eq ''
+  end
 
-  it 'should fail when id is too large'
+  it 'should fail get request when id is too large' do 
+    res = ApiHelper.get_todo 9999999999999
+    expect(res.code).to eq 400
+    expect(res.body).to eq 'id value out of range.'
+  end 
 
 end
