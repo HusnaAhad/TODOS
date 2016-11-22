@@ -97,17 +97,53 @@ describe 'lacedeamon api' do
     #test updated at 
   end
 
-  it 'should fail when PATCHING a todo with wrong id'
+  it 'should fail when PATCHING a todo with wrong id' do
+    todo1 = HTTParty.post "#{base_uri}?title=thejourneybeginspatching&due=21-10-2016"
+    HTTParty.detete"#{base_uri}/#{todo['id']}"
+    patch = HTTParty.patch "#{base_uri}/#{todo['id']}"
+    expect(patch.code).to eq 404
+    expect(patch.body).to eq nil
+  end
 
-  it 'should fail when PATCHING a todo with wrong params'
+  it 'should fail when PATCHING a todo with wrong params' do 
+    todo1 = HTTParty.post"#{base_uri}?title=thejourneybeginsWorngParams&due=21-10-2016"
+    patch = HTTParty.patch"#{base_uri}/#{todo['id']}?tittle=thejourneybeginsWorngParam&due=21-10-2016"
+    expect(patch.code).to eq 422 
+    expect(patch.body).to eq "You must provide the following parameters: <title> or <due> in addition to specifying the todo's <id> in the URL."
+  end
 
-  it 'should fail when PATCHING a todo with invalid date'
+  it 'should fail when PATCHING a todo with invalid date'do 
+   todo1 = HTTParty.post"#{base_uri}?title=thejourneybeginsInvalidDate&due=21-10-2016"
+   patch = HTTParty.patch"#{base_uri}/#{todo['id']}?title=thejourneybeginsInvalidDate&due=blablalbla"
+   expect(patch.code).to eq 400 
+   expect(todo1.body).to eq 'Invalid date format. Use yyyy-mm-dd'
+  end
 
-  it  'should PUT a todo'
+  it  'should PUT a todo'  do 
+    todo1 = HTTParty.post"#{base_uri}?title=thejourneybeginsPuts&due=22-10-2016"
+    put = HTTParty.put"#{base_uri}/#{todo['id']}?title=thejourneybegins3&due=21-10-2016"
+    get = HTTParty.get"#{base_uro}/#{todo['id']}"
+    expect(get.code).to eq 200
+    expect(get[title]).to eq 'thejourneybegins3' 
+    
+  end
+    
+  end
 
-  it 'should fail when PUTTING with wrong id'
+  it 'should fail when PUTTING with wrong id ' do
+    todo1 = HTTParty.post "#{base_uri}?title=thejourneybeginsWongId&due=23-10-2016"
+    HTTParty.delete "#{base_uri}/#{todo['id']}"
+    put = HTTParty.put"#{base_uri}/#{todo['id']}"
+    expect(put.code).to eq 404
+    expect(put.body).to eq nil
+  end
 
-  it 'should fail when PUTTING with wrong params'
+  it 'should fail when PUTTING with wrong params' do 
+    todo1 = HTTParty.post "#{base_uri}?title=thejourneybeginsmorstuff&due=23-10-2016"
+    put = HTTPart.put "#{base_uri}/#{todo['id']}?tittleeeey=thejourneybeginsandmorerandomstuff&due=23-10-2016"
+    expect(put.code).to eq 422
+    expect(put.body).to eq "You must provide the following parameters: <title> or <due> in addition to specifying the todo's <id> in the URL."
+  end
 
   it 'should fail when PUTTING with invalid date'
 
