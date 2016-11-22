@@ -99,17 +99,52 @@ describe 'lacedeamon api' do
     expect(DateTime.parse(res['updated_at'])).to be > DateTime.parse(todo1['updated_at'])
   end
 
-  it 'should fail when PATCHING a todo with wrong id'
+  it 'should fail when PATCHING a todo with wrong id' do
+    todo1 = ApiHelper.post_example
+    ApiHelper.delete todo1['id']
+    patch = ApiHelper.patch todo1['id'], 'thejourneybegins', '22-10-2016'
+    expect(patch.code).to eq 404
+    expect(patch.body).to eq ''
+  end
 
-  it 'should fail when PATCHING a todo with wrong params'
+  it 'should fail when PATCHING a todo with wrong params' do
+    todo1 = ApiHelper.post_example
+    patch = HTTParty.patch "#{ApiHelper.base_uri}#{todo1['id']}?tittle=thejourneybeginsWorngParam&dudde=21-10-2016"
+    expect(patch.code).to eq 422 
+    expect(patch.body).to eq "You must provide the following parameters: <title> or <due> in addition to specifying the todo's <id> in the URL."
+  end
 
-  it 'should fail when PATCHING a todo with invalid date'
+  it 'should fail when PATCHING a todo with invalid date'do 
+    todo1 = ApiHelper.post_example
+    patch = ApiHelper.patch todo1['id'], 'thejourneybegins', 'blablablabla'
+    expect(patch.code).to eq 400 
+    expect(patch.body).to eq 'Invalid date format. Use yyyy-mm-dd'
+  end
 
-  it  'should PUT a todo'
+  it 'should PUT a todo' do
+    todo1 = ApiHelper.post_example
+    put = ApiHelper.put todo1['id'], 'thejourneybeginsgood', '25-12-2016'
+    res = ApiHelper.get_todo todo1['id']
+    expect(res.code).to eq 200
+    expect(res['title']).to eq 'thejourneybeginsgood' 
+    expect(res['due']).to eq '2016-12-25'
+    expect(DateTime.parse res['updated_at']).to be > DateTime.parse(todo1['updated_at'])
+  end
 
-  it 'should fail when PUTTING with wrong id'
+  it 'should fail when PUTTING with wrong id ' do
+    todo1 = ApiHelper.post_example
+    ApiHelper.delete todo1['id']
+    put = ApiHelper.put todo1['id'], 'thejourneybegins12', '26-10-2016'
+    expect(put.code).to eq 404
+    expect(put.body).to eq ''
+  end
 
-  it 'should fail when PUTTING with wrong params'
+  it 'should fail when PUTTING with wrong params' do 
+    todo1 = ApiHelper.post_example
+    put = HTTParty.put "#{ApiHelper.base_uri}#{todo1['id']}?tittleeeey=thejourneybeginsandmorerandomstuff&due=23-10-2016"
+    expect(put.code).to eq 422
+    expect(put.body).to eq "You must provide the following parameters: <title> and <due> in addition to specifying the todo's <id> in the URL."
+  end
 
   it 'should fail when PUTTING with invalid date'
 
