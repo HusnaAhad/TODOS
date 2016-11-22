@@ -51,6 +51,7 @@
         code - 404
         no message - should it have?
 
+
   POST:
     failure:
       code - 405
@@ -61,6 +62,11 @@
         code - 500
         returns '<h1>Internal Server Error</h1>'
           SHOULD IT?!
+
+          it should not
+
+          do code 400
+          with message 'date in wrong format' eg
 
   PATCH:
     success:
@@ -73,9 +79,14 @@
         code - 422 - should it be 405?
         message "You must provide the following parameters: <title> or <due> in addition to specifying the todo's <id> in the URL."
 
+          shuold be 404
+          ody should be nil
+
       wrong parameters:
         code - 422 - should it be 405?
         message "You must provide the following parameters: <title> or <due> in addition to specifying the todo's <id> in the URL."
+
+          should be 422
 
         Why are these the same?
 
@@ -90,10 +101,11 @@
       failure:
         wrong id:
           code - 404
-          doesn't give message - should it?
+          doesn't give message - yes
+
 
         wrong params:
-          code - 422 - should it be 405
+          code - 422
           message "You must provide the following parameters: <title> or <due> in addition to specifying the todo's <id> in the URL."
 
       failure:
@@ -110,7 +122,10 @@
     failure:
       wrong id:
       code - 404
-      no message - should it have message??
+      no message
+
+if ID is too big, returns code 500
+  - needs more testing€
 
 
 
